@@ -1,12 +1,15 @@
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export function generateAccessToken(user) {
-  const payload = { userId: user._id.toString(), role: user.role };
-  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRES || '15m' });
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not defined");
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 }
 
 export function generateRefreshTokenPlain() {
-  // returns a cryptographically secure random token (plain text)
-  return crypto.randomBytes(parseInt(process.env.REFRESH_TOKEN_BYTES || '64')).toString('hex');
+  return crypto.randomBytes(64).toString("hex");
 }

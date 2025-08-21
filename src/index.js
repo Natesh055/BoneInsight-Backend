@@ -1,13 +1,14 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import mongoose from "mongoose";
 
+
 import authRoutes from "./routes/authRoutes.js";
 // import xrayRoutes from "./routes/xrayRoutes.js"; // later
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;

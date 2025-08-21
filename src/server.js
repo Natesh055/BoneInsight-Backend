@@ -24,5 +24,5 @@ app.use('/api/auth', authRoutes);
 // health
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`BoneInsight backend listening on ${PORT}`));
