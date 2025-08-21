@@ -1,22 +1,22 @@
-import fs from 'fs';
-import crypto from 'crypto';
-import path from 'path';
+import fs from "fs";
+import crypto from "crypto";
+import path from "path";
 
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+const UPLOAD_DIR = "./uploads";
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR);
 
-const ALGORITHM = 'aes-256-cbc';
-const KEY = crypto.randomBytes(32); // In production, store securely
-const IV = crypto.randomBytes(16);
-
+// Encrypt file buffer
 export function encryptFile(buffer) {
-  const cipher = crypto.createCipheriv(ALGORITHM, KEY, IV);
+  const key = crypto.randomBytes(32);
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
   const encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
-  return { encrypted, iv: IV.toString('hex') };
+  return { encrypted, key, iv };
 }
 
+// Save file to disk
 export function saveFile(buffer, filename) {
-  const filepath = path.join(UPLOAD_DIR, filename);
+  const filepath = path.join(UPLOAD_DIR, `${Date.now()}-${filename}`);
   fs.writeFileSync(filepath, buffer);
   return filepath;
 }

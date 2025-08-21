@@ -1,7 +1,7 @@
-export function requireRole(...allowedRoles) {
+export function requireRole(role) {
   return (req, res, next) => {
-    if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
-    if (allowedRoles.includes(req.user.role) || req.user.role === 'admin') return next();
-    return res.status(403).json({ message: 'Forbidden' });
+    if (!req.user || req.user.role !== role)
+      return res.status(403).json({ message: "Forbidden" });
+    next();
   };
 }
