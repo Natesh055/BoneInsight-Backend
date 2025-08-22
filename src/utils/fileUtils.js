@@ -1,11 +1,5 @@
-import fs from "fs";
 import crypto from "crypto";
-import path from "path";
 
-const UPLOAD_DIR = "./uploads";
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR);
-
-// Encrypt file buffer
 export function encryptFile(buffer) {
   const key = crypto.randomBytes(32);
   const iv = crypto.randomBytes(16);
@@ -14,9 +8,7 @@ export function encryptFile(buffer) {
   return { encrypted, key, iv };
 }
 
-// Save file to disk
-export function saveFile(buffer, filename) {
-  const filepath = path.join(UPLOAD_DIR, `${Date.now()}-${filename}`);
-  fs.writeFileSync(filepath, buffer);
-  return filepath;
+export function decryptFile(encryptedBuffer, key, iv) {
+  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+  return Buffer.concat([decipher.update(encryptedBuffer), decipher.final()]);
 }
